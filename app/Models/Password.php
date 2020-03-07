@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property string $name
  * @property string $value
+ * @property string $website
+ * @property string $username
+ * @property string $note
  * @property int $user_id
  * @property User $user
  */

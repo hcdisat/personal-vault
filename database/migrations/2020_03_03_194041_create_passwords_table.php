@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\RoutesInfo\V1\PasswordInfo;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,10 +15,14 @@ class CreatePasswordsTable extends Migration
     public function up()
     {
         Schema::create('passwords', static function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
-            $table->string('name');
-            $table->string('value');
+            $table->bigIncrements(PasswordInfo::Id);
+            $table->unsignedBigInteger(PasswordInfo::UserId);
+            $table->string(PasswordInfo::Username);
+            $table->string(PasswordInfo::Value);
+            $table->string(PasswordInfo::Website);
+            $table->string(PasswordInfo::Name)->nullable();
+            $table->text(PasswordInfo::Note)->nullable();
+
             $table->timestamps();
 
             $table->foreign('user_id')

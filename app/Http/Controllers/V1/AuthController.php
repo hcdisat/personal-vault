@@ -6,6 +6,7 @@ use App\Http\Controllers\ApiController;
 use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use phpDocumentor\Reflection\Types\Mixed_;
@@ -19,7 +20,7 @@ class AuthController extends ApiController
      */
     public function login(Request $request): JsonResponse
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('email', 'username', 'password');
         return $this->authenticateUser($credentials);
     }
 
@@ -31,8 +32,10 @@ class AuthController extends ApiController
     {
         try {
             $this->validate($request, [
-                'name' => ['required', 'string', 'max:255'],
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'username' => ['required', 'string', 'max:255', 'unique:users'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ]);
         } catch (ValidationException $e) {
@@ -40,7 +43,11 @@ class AuthController extends ApiController
         }
 
         $this->create($request->only([
-            'name', 'email', 'password'
+            'first_name',
+            'last_name',
+            'email',
+            'username',
+            'password',
         ]));
 
         return $this->authenticateUser(
@@ -75,8 +82,10 @@ class AuthController extends ApiController
     protected function create(array $data): User
     {
         return User::create([
-            'name' => $data['name'],
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
             'email' => $data['email'],
+            'username' => $data['username'],
             'password' => Hash::make($data['password']),
         ]);
     }
@@ -87,16 +96,18 @@ class AuthController extends ApiController
      */
     protected function authenticateUser(array $credentials): JsonResponse
     {
-        foreach (['email', 'password'] as $key) {
-            if (!array_key_exists($key, $credentials)) {
-                return response()->json(['errors' => [
-                    'Bad request.'
-                ]], 400);
-            }
+        $authColumns = collect(['email', 'username', 'password']);
+        $validFieldsCount = $authColumns->filter(fn($key) =>
+            array_key_exists($key, $credentials));
+
+
+        if ($validFieldsCount->count() < 2) {
+            return response()->badRequest('Bad Request');
         }
 
-        if (! $token = auth()->attempt($credentials))
-            return response()->json(['error' => 'Bad Request'], 401);
+        if (! $token = auth()->attempt($credentials)) {
+            return response()->badRequest('Bad Request');
+        }
 
         return $this->respondWithToken($token);
     }

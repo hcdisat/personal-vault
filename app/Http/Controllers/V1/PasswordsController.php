@@ -3,6 +3,7 @@
 use App\Core\Repositories\DbPasswordRepository;
 use App\Core\Repositories\Transformers\PasswordTransformer;
 use App\Http\Controllers\ApiController;
+use App\Http\RoutesInfo\V1\PasswordInfo;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -62,10 +63,11 @@ class PasswordsController extends ApiController
 
         $data = $request->only('name', 'value');
 
-        // If validation passes
         if ($this->passwords->update($password, $data)) {
-            return response()
-                ->ok($password->toArray(), 'Password was updated');
+            return response()->ok(
+                $this->transformer->transform($password),
+                'Password was updated'
+            );
         }
 
         return response()->badRequest('Password not updated');
@@ -78,8 +80,11 @@ class PasswordsController extends ApiController
     public function store(Request $request): JsonResponse
     {
         $data = $request->only([
-            'name',
-            'value'
+            PasswordInfo::Name,
+            PasswordInfo::Value,
+            PasswordInfo::Username,
+            PasswordInfo::Website,
+            PasswordInfo::Note
         ]);
 
         $password = $this->passwords->create($data);
@@ -99,11 +104,5 @@ class PasswordsController extends ApiController
         return $this->passwords->destroy($passwordId) > 0
             ? response()->noContentJson()
             : response()->notFound('Resource was not found.');
-    }
-
-    public function self(): JsonResponse
-    {
-        dd(request()->route()->getName());
-        return response()->ok();
     }
 }

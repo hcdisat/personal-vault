@@ -16,19 +16,19 @@ Route::prefix('v1')
             });
 
         Route::prefix('passwords')
-            ->middleware(['api.auth'])
+            ->middleware(['api.auth']) 
             ->group(static function (Router $r) {
                 $r->get('', 'PasswordsController@index');
                 $r->get('{password}', 'PasswordsController@show');
                 $r->delete('{password}', 'PasswordsController@destroy');
 
+                $r->get('self', 'PasswordsController@self')
+                    ->name(PasswordInfo::Self);
+
                 Route::middleware('api.validator')
                     ->group(static function (Router $r) {
                         $r->post('', 'PasswordsController@store')
                             ->name(PasswordInfo::Store);
-
-                        $r->get('self', 'PasswordsController@self')
-                            ->name(PasswordInfo::Self);
 
                         $r->put('{password}', 'PasswordsController@update')
                             ->name(PasswordInfo::Update);

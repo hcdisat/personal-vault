@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\RoutesInfo\V1\PasswordInfo;
 use App\User;
 use Faker\Generator as Faker;
 use Illuminate\Database\Eloquent\Factory;
@@ -19,8 +20,11 @@ use Illuminate\Support\Str;
 
 $factory->define(\App\Models\Password::class, static function (Faker $faker) {
     return [
-        'name' => $faker->name,
-        'value' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-        'user_id' => User::first()->id
+        PasswordInfo::Name => $faker->name,
+        PasswordInfo::Value => $faker->password, // password
+        PasswordInfo::UserId => User::first()->id,
+        PasswordInfo::Username => $faker->email,
+        PasswordInfo::Website => str_replace(' ', '', $faker->sentence(3)).'com',
+        PasswordInfo::Note => $faker->text(60)
     ];
 });

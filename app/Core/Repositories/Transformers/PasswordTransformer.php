@@ -2,6 +2,7 @@
 
 namespace App\Core\Repositories\Transformers;
 
+use App\Http\RoutesInfo\V1\PasswordInfo;
 use App\Models\Password;
 use Traversable;
 
@@ -14,9 +15,14 @@ class PasswordTransformer
     public function transform(Password $password): array
     {
         return [
-            'id' => $password->id,
-            'name' => $password->name,
-            'password' => $password->value
+            PasswordInfo::Id => $password->id,
+            PasswordInfo::UserId => $password->user_id,
+            PasswordInfo::Name => $password->name,
+            PasswordInfo::Username => $password->username,
+            PasswordInfo::Website => $password->website,
+            PasswordInfo::Note => $password->note,
+            PasswordInfo::Value => '**************',
+
         ];
     }
 

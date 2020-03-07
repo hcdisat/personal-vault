@@ -24,8 +24,9 @@ class UpdatePasswordRules implements ValidationRulesContract
     public function rules(): array
     {
         return [
-            PasswordInfo::Name => ['sometimes', 'required', 'string', 'max:255'],
-            PasswordInfo::Value => ['sometimes', 'required', 'min:8']
+            PasswordInfo::Username => ['sometimes', 'required', 'string', 'max:255'],
+            PasswordInfo::Value => ['sometimes', 'required', 'min:8'],
+            PasswordInfo::Website => ['sometimes', 'required', 'string'],
         ];
     }
 

@@ -24,8 +24,9 @@ class StorePasswordRules implements ValidationRulesContract
     public function rules(): array
     {
         return [
-            PasswordInfo::Name => ['required', 'string', 'max:255'],
-            PasswordInfo::Value => ['required', 'min:8']
+            PasswordInfo::Username => ['required', 'string', 'max:255'],
+            PasswordInfo::Value => ['required', 'min:8'],
+            PasswordInfo::Website => ['required', 'string'],
         ];
     }
 
