@@ -13,6 +13,9 @@ class PasswordInfo
     public const Value = 'value';
     public const Name = 'name';
     public const Note = 'note';
+    public const CreatedAt = 'created_at';
+    public const UpdatedAt = 'updated_at';
+    public const DeletedAt = 'deleted_at';
 
     public const Base = 'passwords';
     public const Self = self::Base.'-self';

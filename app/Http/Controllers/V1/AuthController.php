@@ -63,8 +63,7 @@ class AuthController extends ApiController
         try {
             return $this->respondWithToken(auth()->refresh());
         } catch (JWTException $ex) {
-            return  $this->respondWithError(
-                $ex->getMessage(), 401);
+            return  response()->unauthorized($ex->getMessage());
         }
     }
 
@@ -106,7 +105,7 @@ class AuthController extends ApiController
         }
 
         if (! $token = auth()->attempt($credentials)) {
-            return response()->badRequest('Bad Request');
+            return response()->unauthorized('Unauthorized.');
         }
 
         return $this->respondWithToken($token);

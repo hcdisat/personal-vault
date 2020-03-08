@@ -76,6 +76,28 @@ class HttpResponseMacros
     /**
      * @return callable
      */
+    public function created(): callable
+    {
+        /**
+         * @param array $data
+         * @param string|null $message
+         * @return JsonResponse
+         */
+        return function(array $data = null, string $message = null): JsonResponse
+        {
+            return response()
+                ->respondWith(
+                    $data,
+                    $message,
+                    null,
+                    HttpStatus::CREATED
+                );
+        };
+    }
+
+    /**
+     * @return callable
+     */
     public function noContentJson(): callable
     {
         /**

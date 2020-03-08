@@ -16,7 +16,7 @@ Route::prefix('v1')
             });
 
         Route::prefix('passwords')
-            ->middleware(['api.auth']) 
+            ->middleware(['api.auth'])
             ->group(static function (Router $r) {
                 $r->get('', 'PasswordsController@index');
                 $r->get('{password}', 'PasswordsController@show');

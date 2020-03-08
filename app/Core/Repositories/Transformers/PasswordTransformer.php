@@ -22,6 +22,7 @@ class PasswordTransformer
             PasswordInfo::Website => $password->website,
             PasswordInfo::Note => $password->note,
             PasswordInfo::Value => '**************',
+            PasswordInfo::CreatedAt => $password->created_at->diffForHumans(),
 
         ];
     }

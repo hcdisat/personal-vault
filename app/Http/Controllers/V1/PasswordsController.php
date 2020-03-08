@@ -61,7 +61,7 @@ class PasswordsController extends ApiController
             return response()->notFound('Password does not exists');
         }
 
-        $data = $request->only('name', 'value');
+        $data = $request->only($this->getDataFields());
 
         if ($this->passwords->update($password, $data)) {
             return response()->ok(
@@ -79,17 +79,11 @@ class PasswordsController extends ApiController
      */
     public function store(Request $request): JsonResponse
     {
-        $data = $request->only([
-            PasswordInfo::Name,
-            PasswordInfo::Value,
-            PasswordInfo::Username,
-            PasswordInfo::Website,
-            PasswordInfo::Note
-        ]);
+        $data = $request->only($this->getDataFields());
 
         $password = $this->passwords->create($data);
 
-        return response()->ok(
+        return response()->created(
             $this->transformer->transform($password),
             'created'
         );
@@ -104,5 +98,19 @@ class PasswordsController extends ApiController
         return $this->passwords->destroy($passwordId) > 0
             ? response()->noContentJson()
             : response()->notFound('Resource was not found.');
+    }
+
+    /**
+     * @return array
+     */
+    protected function getDataFields(): array
+    {
+        return [
+            PasswordInfo::Name,
+            PasswordInfo::Value,
+            PasswordInfo::Username,
+            PasswordInfo::Website,
+            PasswordInfo::Note
+        ];
     }
 }
